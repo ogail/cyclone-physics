@@ -28,7 +28,8 @@ class BallisticDemo : public Application
         PISTOL,
         ARTILLERY,
         FIREBALL,
-        LASER
+        LASER,
+		GRENADE
     };
 
     /**
@@ -156,6 +157,13 @@ void BallisticDemo::fire()
         shot->particle.setAcceleration(0.0f, 0.0f, 0.0f); // No gravity
         shot->particle.setDamping(0.99f);
         break;
+
+	case GRENADE:
+		shot->particle.setMass(1.0f); // 1.0kg
+		shot->particle.setVelocity(0.0f, 17.32f, 10.0f); // 20m/s
+		shot->particle.setAcceleration(0.0f, -20.0f, 0.0f);
+		shot->particle.setDamping(0.99f);
+		break;
     }
 
     // Set the data common to all particle types
@@ -183,7 +191,7 @@ void BallisticDemo::update()
 
             // Check if the particle is now invalid
             if (shot->particle.getPosition().y < 0.0f ||
-                shot->startTime+5000 < TimingData::get().lastFrameTimestamp ||
+                shot->startTime+10000 < TimingData::get().lastFrameTimestamp ||
                 shot->particle.getPosition().z > 200.0f)
             {
                 // We simply set the shot type to be unused, so the
@@ -245,6 +253,7 @@ void BallisticDemo::display()
     case ARTILLERY: renderText(10.0f, 10.0f, "Current Ammo: Artillery"); break;
     case FIREBALL: renderText(10.0f, 10.0f, "Current Ammo: Fireball"); break;
     case LASER: renderText(10.0f, 10.0f, "Current Ammo: Laser"); break;
+	case GRENADE: renderText(10.0f, 10.0f, "Current Ammo: Grenade"); break;
     }
 }
 
@@ -261,7 +270,8 @@ void BallisticDemo::key(unsigned char key)
     case '1': currentShotType = PISTOL; break;
     case '2': currentShotType = ARTILLERY; break;
     case '3': currentShotType = FIREBALL; break;
-    case '4': currentShotType = LASER; break;
+	case '4': currentShotType = LASER; break;
+	case '5': currentShotType = GRENADE; break;
     }
 }
 
