@@ -16,6 +16,11 @@
 #include "../timing.h"
 
 #include <stdio.h>
+#include <string>
+
+using namespace std;
+
+#define TORADIANS(X) (((X) * R_PI) / 180.0f)
 
 enum ShotType
 {
@@ -23,24 +28,40 @@ enum ShotType
     PISTOL,
     ARTILLERY,
     FIREBALL,
-    LASER
+    LASER,
+	GRENADE
 };
 
 class AmmoRound : public cyclone::CollisionSphere
 {
 public:
     ShotType type;
-    unsigned startTime;
+    
+	unsigned startTime;
+	
+	cyclone::real throwingAngle;
 
     AmmoRound()
     {
         body = new cyclone::RigidBody;
+		throwingAngle = 60.0f;
     }
 
     ~AmmoRound()
     {
         delete body;
     }
+
+	cyclone::Vector3 calculateThrowingVelocity(cyclone::real speed)
+	{
+		cyclone::Vector3 velocity;
+		cyclone::real speedSqrt = sqrtf(speed);
+		velocity.x = 0;
+		velocity.y = sinf(TORADIANS(throwingAngle)) * speed;
+		velocity.z = cosf(TORADIANS(throwingAngle)) * speed;
+
+		return velocity;
+	}
 
     /** Draws the box, excluding its shadow. */
     void render()
@@ -59,13 +80,15 @@ public:
     void setState(ShotType shotType)
     {
         type = shotType;
+		cyclone::Vector3 fireVelocity;
 
         // Set the properties of the particle
         switch(type)
         {
         case PISTOL:
             body->setMass(1.5f);
-            body->setVelocity(0.0f, 0.0f, 20.0f);
+            //body->setVelocity(0.0f, 0.0f, 20.0f);
+			body->setVelocity(calculateThrowingVelocity(20.0f));
             body->setAcceleration(0.0f, -0.5f, 0.0f);
             body->setDamping(0.99f, 0.8f);
             radius = 0.2f;
@@ -73,7 +96,8 @@ public:
 
         case ARTILLERY:
             body->setMass(200.0f); // 200.0kg
-            body->setVelocity(0.0f, 30.0f, 40.0f); // 50m/s
+            //body->setVelocity(0.0f, 30.0f, 40.0f); // 50m/s
+			body->setVelocity(calculateThrowingVelocity(50.0f));
             body->setAcceleration(0.0f, -21.0f, 0.0f);
             body->setDamping(0.99f, 0.8f);
             radius = 0.4f;
@@ -81,7 +105,8 @@ public:
 
         case FIREBALL:
             body->setMass(4.0f); // 4.0kg - mostly blast damage
-            body->setVelocity(0.0f, -0.5f, 10.0); // 10m/s
+            //body->setVelocity(0.0f, -0.5f, 10.0); // 10m/s
+			body->setVelocity(calculateThrowingVelocity(10.0f));
             body->setAcceleration(0.0f, 0.3f, 0.0f); // Floats up
             body->setDamping(0.9f, 0.8f);
             radius = 0.6f;
@@ -91,11 +116,21 @@ public:
             // Note that this is the kind of laser bolt seen in films,
             // not a realistic laser beam!
             body->setMass(0.1f); // 0.1kg - almost no weight
-            body->setVelocity(0.0f, 0.0f, 100.0f); // 100m/s
+            //body->setVelocity(0.0f, 0.0f, 100.0f); // 100m/s
+			body->setVelocity(calculateThrowingVelocity(100.0f));
             body->setAcceleration(0.0f, 0.0f, 0.0f); // No gravity
             body->setDamping(0.99f, 0.8f);
             radius = 0.2f;
             break;
+
+		case GRENADE:
+			body->setMass(15.0f); // 1.0kg
+			//body->setVelocity(0.0f, 17.32f, 10.0f); // 20m/s
+			body->setVelocity(calculateThrowingVelocity(20.0f));
+			body->setAcceleration(0.0f, -20.0f, 0.0f);
+			body->setDamping(0.99f, 0.8f);
+			radius = 0.2f;
+			break;
         }
 
         body->setCanSleep(false);
@@ -178,11 +213,13 @@ public:
  */
 class BigBallisticDemo : public RigidBodyApplication
 {
-    /**
+    /**	
      * Holds the maximum number of  rounds that can be
      * fired.
      */
     const static unsigned ammoRounds = 256;
+
+	cyclone::real throwingAngle;
 
     /** Holds the particle data. */
     AmmoRound ammo[ammoRounds];
@@ -190,7 +227,7 @@ class BigBallisticDemo : public RigidBodyApplication
     /**
     * Holds the number of boxes in the simulation.
     */
-    const static unsigned boxes = 2;
+    const static unsigned boxes = 24;
 
     /** Holds the box data. */
     Box boxData[boxes];
@@ -209,6 +246,9 @@ class BigBallisticDemo : public RigidBodyApplication
 
     /** Dispatches a round. */
     void fire();
+
+	/** Calculates the thowing speed based on the particle speed and aiming angle **/
+	cyclone::Vector3 calculateThrowingVelocity(cyclone::real speed, cyclone::real angle);
 
 public:
     /** Creates a new demo object. */
@@ -263,12 +303,14 @@ void BigBallisticDemo::reset()
     }
 
     // Initialise the box
-    cyclone::real z = 20.0f;
+    cyclone::real z = 5.0f;
     for (Box *box = boxData; box < boxData+boxes; box++)
     {
         box->setState(z);
-        z += 90.0f;
+        z += 5.0f;
     }
+
+	throwingAngle = 60.0;
 }
 
 const char* BigBallisticDemo::getTitle()
@@ -289,6 +331,7 @@ void BigBallisticDemo::fire()
     if (shot >= ammo+ammoRounds) return;
 
     // Set the shot
+	shot->throwingAngle = throwingAngle;
     shot->setState(currentShotType);
 
 }
@@ -382,8 +425,11 @@ void BigBallisticDemo::display()
     glDisable(GL_DEPTH_TEST);
 
     // Render the description
+	char buffer[128];
+	sprintf_s(buffer, "Throwing angle: %f", throwingAngle);
     glColor3f(0.0f, 0.0f, 0.0f);
-    renderText(10.0f, 34.0f, "Click: Fire\n1-4: Select Ammo");
+	renderText(10.0f, 34.0f, "Click: Fire\n1-5: Select Ammo");
+	renderText(10.0f, 50.0f, buffer);
 
     // Render the name of the current shot type
     switch(currentShotType)
@@ -392,6 +438,7 @@ void BigBallisticDemo::display()
     case ARTILLERY: renderText(10.0f, 10.0f, "Current Ammo: Artillery"); break;
     case FIREBALL: renderText(10.0f, 10.0f, "Current Ammo: Fireball"); break;
     case LASER: renderText(10.0f, 10.0f, "Current Ammo: Laser"); break;
+	case GRENADE: renderText(10.0f, 10.0f, "Current Ammo: Grenade"); break;
     }
 }
 
@@ -448,8 +495,11 @@ void BigBallisticDemo::key(unsigned char key)
     case '2': currentShotType = ARTILLERY; break;
     case '3': currentShotType = FIREBALL; break;
     case '4': currentShotType = LASER; break;
+	case '5': currentShotType = GRENADE; break;
 
     case 'r': case 'R': reset(); break;
+	case 'w': case 'W' : throwingAngle += 5.0f; break;
+	case 's': case 'S' : throwingAngle -= 5.0f; break;
     }
 }
 
