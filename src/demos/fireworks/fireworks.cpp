@@ -192,7 +192,7 @@ class FireworksDemo : public Application
     unsigned nextFirework;
 
     /** And the number of rules. */
-    const static unsigned ruleCount = 10;
+    const static unsigned ruleCount = 12;
 
     /** Holds the set of rules. */
     FireworkRule rules[ruleCount];
@@ -346,7 +346,35 @@ void FireworksDemo::initFireworkRules()
 		0.01 // damping
 		);
 	rules[9].payloads[0].set(3, 5);
-    // ... and so on for other firework types ...
+
+	rules[10].init(10);
+	rules[10].setParameters(
+		11, // type
+		1, 2, // age range
+		cyclone::Vector3(-30, 30, 0), // min velocity
+		cyclone::Vector3(30, 30, 0), // max velocity
+		0.01 // damping
+		);
+	for (int i=0; i < 10; ++i)
+	{
+		rules[10].payloads[i].set(12, 10);
+	}
+
+	rules[11].init(10);
+	rules[11].setParameters(
+		12, // type
+		0.25f, 0.5f, // age range
+		cyclone::Vector3(-30, 2, 0), // min velocity
+		cyclone::Vector3(30, 5, 0), // max velocity
+		0.95 // damping
+		);
+
+	for (int i=0; i < 10; ++i)
+	{
+		rules[11].payloads[i].set(6, 1);
+	}
+
+	// ... and so on for other firework types ...
 }
 
 void FireworksDemo::initGraphics()
@@ -482,6 +510,8 @@ void FireworksDemo::key(unsigned char key)
     case '8': create(8, 1, NULL); break;
 	case '9': create(9, 1, NULL); break;
 	case 'a': create(10, 1, NULL); break;
+	case 'c': create(11, 1, NULL); break;
+	case 'b': create(11, 1, NULL); break;
     }
 }
 
