@@ -25,68 +25,113 @@ enum Direction { Right, Left, Forward, Backward };
  * Uplifts are particles, with additional data for rendering and
  * evolution.
  */
-class ParticleUplift : public ParticleForceGenerator
+class UpliftForceGenerator : public ParticleForceGenerator
 {
+private:
+	unsigned forceAmount;
+
+	Vector3 position;
+
+	real radius;
+
 public:
+	UpliftForceGenerator(unsigned amount, Vector3 position, real radius):
+		forceAmount(amount),
+		position(position),
+		radius(radius)
+	{
+		printf("force generated");
+	}
+
 	void updateForce(Particle* particle, real duration)
     {
-        // Update the particle.
+		Vector3 temp = particle->getPosition();
+		temp.y = position.y;
+		Vector3 distance = temp - position;
+
+		if (distance.magnitude() <= radius)
+		{
+			particle->addForce(Vector3(0.0f, forceAmount, 0.0f));
+		}
     }
 };
 
-class Ball : public CollisionSphere
+/**
+ * pushes particles.
+ */
+class PushForceGenerator : public ParticleForceGenerator
+{
+private:
+	unsigned forceAmount;
+
+	Vector3 direction;
+
+	real totalDuration;
+
+	real remaining;
+
+public:
+	PushForceGenerator(unsigned amount, real totalDuration):
+		forceAmount(amount),
+		direction(Vector3()),
+		totalDuration(totalDuration),
+		remaining(0.0f)
+	{
+		printf("force generated");
+	}
+
+	void push(Vector3 direction)
+	{
+		this->direction = direction;
+		remaining = totalDuration;
+	}
+
+	void updateForce(Particle* particle, real duration)
+    {
+		if (remaining > 0.0f)
+		{
+			particle->addForce(direction * forceAmount);
+			remaining -= duration;
+		}
+    }
+};
+
+class Ball
 {
 public:
-	unsigned startTime;
+	Particle particle;
 
 	Ball(Vector3 position)
 	{
-		body = new RigidBody;
-		body->setMass(200.0f); // 200.0kg
-		body->setVelocity(0.0f, 0.0f, 0.0f); // 50m/s
-		body->setAcceleration(0.0f, 0.0f, 0.0f);
-		body->setDamping(0.99f, 0.8f);
-		radius = 10.0f;
-		
-		body->setCanSleep(false);
-		body->setAwake();
+		particle.setMass(1.0f);
+		particle.setVelocity(Vector3());
+		particle.setAcceleration(Vector3());
+		particle.setDamping(0.5f);
 
-		Matrix3 tensor;
-		real coeff = radius * body->getMass() * radius * radius;
-		tensor.setInertiaTensorCoeffs(coeff, coeff, coeff);
-		body->setInertiaTensor(tensor);
-
-		// Set the data common to all particle types
-		body->setPosition(position);
-		startTime = TimingData::get().lastFrameTimestamp;
-
+		particle.setPosition(position);
+	
 		// Clear the force accumulators
-		body->calculateDerivedData();
-		calculateInternals();
-	}
-
-	~Ball()
-	{
-		delete body;
+		particle.clearAccumulator();
 	}
 
 	/** Draws the box, excluding its shadow. */
 	void render()
 	{
-		// Get the OpenGL transformation
-		GLfloat mat[16];
-		body->getGLTransform(mat);
+		Vector3 position;
+		particle.getPosition(&position);
 
+		glColor3f(0.75, 0.75, 0.75);
 		glPushMatrix();
-		glMultMatrixf(mat);
-		glutSolidSphere(radius, 20, 20);
+		glTranslatef(position.x, position.y, position.z);
+		glutSolidSphere(10.0f, 20, 20);
 		glPopMatrix();
-	}
 
-	/** Moves the ball. */
-	void move(Direction dir)
-	{
-		
+		glColor3f(0.5, 0.5, 0.5);
+		glPushMatrix();
+		glTranslatef(position.x, 2.0f, position.z);
+		glScalef(1.0f, 0.1f, 1.0f);
+		glutSolidSphere(10.0f, 20, 20);
+		glPopMatrix();
 	}
 };
 
@@ -97,9 +142,17 @@ class UpliftDemo : public Application
 {
 	static const int PlaneWidth = 300;
 
-	static const int PlaneHight = 1000;
+	static const int PlaneHight = 300;
+
+	ParticleWorld world;
 
 	Ball ball;
+
+	Vector3 upliftPosition;
+
+	real radius;
+
+	PushForceGenerator pushForceGenerator;
 
     /** Moves the particle. */
     void move(Direction dir);
@@ -127,9 +180,17 @@ public:
 
 // Method definitions
 UpliftDemo::UpliftDemo()
-	: ball(Vector3(PlaneWidth / 2, 50, 50))
+	:
+	ball(Vector3(PlaneWidth / 2, 75, 50)),
+	world(1),
+	upliftPosition(PlaneWidth / 2, 0, PlaneHight / 2),
+	radius(40.0f),
+	pushForceGenerator(50, 0.5f)
 {
-    
+    world.getParticles().push_back(&ball.particle);
+	world.getForceRegistry().add(&ball.particle, new ParticleGravity(Vector3::GRAVITY));
+	world.getForceRegistry().add(&ball.particle, new UpliftForceGenerator(50.0f, upliftPosition, radius));
+	world.getForceRegistry().add(&ball.particle, &pushForceGenerator);
 }
 
 UpliftDemo::~UpliftDemo()
@@ -152,18 +213,35 @@ const char* UpliftDemo::getTitle()
 
 void UpliftDemo::move(Direction dir)
 {
-    // Move the ball.
+    switch (dir)
+    {
+	case Direction::Backward:
+		pushForceGenerator.push(Vector3(0.0f, 0.0f, 1.0f));
+    	break;
+	case Direction::Forward:
+		pushForceGenerator.push(Vector3(0.0f, 0.0f, -1.0f));
+		break;
+	case Direction::Left:
+		pushForceGenerator.push(Vector3(-1.0f, 0.0f, 0.0f));
+		break;
+	case Direction::Right:
+		pushForceGenerator.push(Vector3(1.0f, 0.0f, 0.0f));
+		break;
+    }
+    
 }
 
 void UpliftDemo::update()
 {
+	// Clear accumulators
+	world.startFrame();
+
     // Find the duration of the last frame in seconds
     float duration = (float)TimingData::get().lastFrameDuration * 0.001f;
     if (duration <= 0.0f) return;
 
-	// Write update code here
-	ball.body->integrate(duration);
-	ball.calculateInternals();
+	// Run the simulation
+	world.runPhysics(duration);
 
     Application::update();
 }
@@ -175,7 +253,7 @@ void UpliftDemo::display()
     // Clear the viewport and set the camera direction
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt(PlaneWidth / 2.0, 100.0, -100.0,  PlaneWidth / 2.0, 0.0, 50.0,  0.0, 1.0, 0.0);
+    gluLookAt(PlaneWidth, 150, PlaneHight / 2.0,  PlaneWidth / 2.0, 0.0, PlaneHight / 2.0,  0.0, 1.0, 0.0);
 
     glBegin(GL_QUADS);
 	glColor3f(0.0, 0.0, 1.0);
@@ -185,7 +263,14 @@ void UpliftDemo::display()
 	glVertex3d(0, 0, 0);
     glEnd();
 
-	glColor3f(1, 0, 0);
+	// Draw the ball
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glPushMatrix();
+	glTranslatef(upliftPosition.x, upliftPosition.y, upliftPosition.z);
+	glScalef(1.0f, 0.1f, 1.0f);
+	glutSolidSphere(radius, 20, 20);
+	glPopMatrix();
+
 	ball.render();
 }
 
@@ -193,10 +278,10 @@ void UpliftDemo::key(unsigned char key)
 {
     switch (key)
     {
-	case 'a': move(Direction::Left); break;
-    case 'd': move(Direction::Right); break;
-    case 'w': move(Direction::Forward); break;
-    case 's': move(Direction::Backward); break;
+	case 'a': move(Direction::Backward); break;
+    case 'd': move(Direction::Forward); break;
+    case 'w': move(Direction::Left); break;
+    case 's': move(Direction::Right); break;
     }
 }
 

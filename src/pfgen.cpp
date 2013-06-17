@@ -10,10 +10,11 @@
  * software licence.
  */
 
+#include <algorithm>
 #include <cyclone/pfgen.h>
 
 using namespace cyclone;
-
+using namespace std;
 
 void ParticleForceRegistry::updateForces(real duration)
 {

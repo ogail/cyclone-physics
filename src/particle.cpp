@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <cyclone/particle.h>
+#include <cstdio>
 
 using namespace cyclone;
 
@@ -36,11 +37,26 @@ void Particle::integrate(real duration)
     Vector3 resultingAcc = acceleration;
     resultingAcc.addScaledVector(forceAccum, inverseMass);
 
+	if (forceAccum.y > 0.0f)
+	{
+		printf("v before updating with a=%f, v=%f\n", resultingAcc.y, velocity.y);
+	}
+
     // Update linear velocity from the acceleration.
     velocity.addScaledVector(resultingAcc, duration);
 
+	if (forceAccum.y > 0.0f)
+	{
+		printf("v after updating with a=%f, v=%f\n", resultingAcc.y, velocity.y);
+	}
+
     // Impose drag.
     velocity *= real_pow(damping, duration);
+
+	if (forceAccum.y > 0.0f)
+	{
+		printf("next frame f=%f v=%f a=%f t=%f\n", forceAccum.y, velocity.y, resultingAcc.y, duration);
+	}
 
     // Clear the forces.
     clearAccumulator();

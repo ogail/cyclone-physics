@@ -6,10 +6,15 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fireworks", "fireworks.vcxproj", "{219D48FC-B80B-4CB9-9D39-F67E66E4ACF6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uplift", "uplift.vcxproj", "{56E850CD-22F0-43D8-B195-FF5B52B0A4C8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD} = {EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bigballistic", "bigballistic.vcxproj", "{D9C2AEE8-4C66-425E-84E1-CA67DD8D862D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ballistic", "ballistic.vcxproj", "{55B10BFD-2539-4D11-9A01-60923A6F8F4C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blob", "blob.vcxproj", "{01796F0D-FEFC-4B31-93DB-2D1FF234A780}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +52,12 @@ Global
 		{55B10BFD-2539-4D11-9A01-60923A6F8F4C}.Release|Win32.ActiveCfg = Release|Win32
 		{55B10BFD-2539-4D11-9A01-60923A6F8F4C}.Release|Win32.Build.0 = Release|Win32
 		{55B10BFD-2539-4D11-9A01-60923A6F8F4C}.Release|Win32.Deploy.0 = Release|Win32
+		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Debug|Win32.ActiveCfg = Debug|Win32
+		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Debug|Win32.Build.0 = Debug|Win32
+		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Debug|Win32.Deploy.0 = Debug|Win32
+		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Release|Win32.ActiveCfg = Release|Win32
+		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Release|Win32.Build.0 = Release|Win32
+		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
