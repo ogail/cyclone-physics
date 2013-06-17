@@ -40,7 +40,7 @@ public:
 		position(position),
 		radius(radius)
 	{
-		printf("force generated");
+		printf("UpliftForceGenerator force generated");
 	}
 
 	void updateForce(Particle* particle, real duration)
@@ -50,6 +50,33 @@ public:
 		Vector3 distance = temp - position;
 
 		if (distance.magnitude() <= radius)
+		{
+			particle->addForce(Vector3(0.0f, forceAmount, 0.0f));
+		}
+    }
+};
+
+/**
+ * Uplifts are particles, with additional data for rendering and
+ * evolution.
+ */
+class FloorAirForceGenerator : public ParticleForceGenerator
+{
+private:
+	unsigned forceAmount;
+	real floorYPos;
+
+public:
+	FloorAirForceGenerator(unsigned amount, real floorYPos):
+		forceAmount(amount),
+		floorYPos(floorYPos)
+	{
+		printf("FloorAirForceGenerator force generated");
+	}
+
+	void updateForce(Particle* particle, real duration)
+    {
+		if (particle->getPosition().y <= floorYPos)
 		{
 			particle->addForce(Vector3(0.0f, forceAmount, 0.0f));
 		}
@@ -185,11 +212,12 @@ UpliftDemo::UpliftDemo()
 	world(1),
 	upliftPosition(PlaneWidth / 2, 0, PlaneHight / 2),
 	radius(40.0f),
-	pushForceGenerator(50, 0.5f)
+	pushForceGenerator(20, 0.5f)
 {
     world.getParticles().push_back(&ball.particle);
 	world.getForceRegistry().add(&ball.particle, new ParticleGravity(Vector3::GRAVITY));
 	world.getForceRegistry().add(&ball.particle, new UpliftForceGenerator(50.0f, upliftPosition, radius));
+	world.getForceRegistry().add(&ball.particle, new FloorAirForceGenerator(1000.0f, 0.0f));
 	world.getForceRegistry().add(&ball.particle, &pushForceGenerator);
 }
 
