@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\demos\spring\spring.cpp" />
+    <ClCompile Include="..\src\demos\app.cpp">
+      <Filter>Common Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\demos\main.cpp">
+      <Filter>Common Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\demos\timing.cpp">
+      <Filter>Common Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\demos\app.h">
+      <Filter>Common Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\demos\timing.h">
+      <Filter>Common Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common Files">
+      <UniqueIdentifier>{30624d04-8f01-4ab2-bc55-1c977649329e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

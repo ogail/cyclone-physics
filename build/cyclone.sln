@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ballistic", "ballistic.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blob", "blob.vcxproj", "{01796F0D-FEFC-4B31-93DB-2D1FF234A780}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spring", "spring.vcxproj", "{59498D62-0DC9-45B2-B8DB-1E565D78F368}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -58,6 +60,10 @@ Global
 		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Release|Win32.ActiveCfg = Release|Win32
 		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Release|Win32.Build.0 = Release|Win32
 		{01796F0D-FEFC-4B31-93DB-2D1FF234A780}.Release|Win32.Deploy.0 = Release|Win32
+		{59498D62-0DC9-45B2-B8DB-1E565D78F368}.Debug|Win32.ActiveCfg = Debug|Win32
+		{59498D62-0DC9-45B2-B8DB-1E565D78F368}.Debug|Win32.Build.0 = Debug|Win32
+		{59498D62-0DC9-45B2-B8DB-1E565D78F368}.Release|Win32.ActiveCfg = Release|Win32
+		{59498D62-0DC9-45B2-B8DB-1E565D78F368}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
