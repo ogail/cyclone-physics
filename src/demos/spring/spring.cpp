@@ -283,7 +283,7 @@ void SpringDemo::initGraphics()
 
 const char* SpringDemo::getTitle()
 {
-    return "Cyclone > Uplift Demo";
+    return "Cyclone > Spring Demo";
 }
 
 void SpringDemo::move(Direction dir)
