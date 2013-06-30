@@ -15,73 +15,13 @@
 #include "../app.h"
 #include "../timing.h"
 
+#include <cstdarg>
+#include <cstdlib>
 #include <stdio.h>
 
 using namespace cyclone;
 
 enum Direction { Right, Left, Forward, Backward };
-
-/**
- * Uplifts are particles, with additional data for rendering and
- * evolution.
- */
-class UpliftForceGenerator : public ParticleForceGenerator
-{
-private:
-	unsigned forceAmount;
-
-	Vector3 position;
-
-	real radius;
-
-public:
-	UpliftForceGenerator(unsigned amount, Vector3 position, real radius):
-		forceAmount(amount),
-		position(position),
-		radius(radius)
-	{
-		
-	}
-
-	void updateForce(Particle* particle, real duration)
-    {
-		Vector3 temp = particle->getPosition();
-		temp.y = position.y;
-		Vector3 distance = temp - position;
-
-		if (distance.magnitude() <= radius)
-		{
-			particle->addForce(Vector3(0.0f, forceAmount, 0.0f));
-		}
-    }
-};
-
-/**
- * Uplifts are particles, with additional data for rendering and
- * evolution.
- */
-class FloorAirForceGenerator : public ParticleForceGenerator
-{
-private:
-	unsigned forceAmount;
-	real floorYPos;
-
-public:
-	FloorAirForceGenerator(unsigned amount, real floorYPos):
-		forceAmount(amount),
-		floorYPos(floorYPos)
-	{
-
-	}
-
-	void updateForce(Particle* particle, real duration)
-    {
-		if (particle->getPosition().y <= floorYPos)
-		{
-			particle->addForce(Vector3(0.0f, forceAmount, 0.0f));
-		}
-    }
-};
 
 /**
  * pushes particles.
@@ -123,17 +63,20 @@ public:
     }
 };
 
-class Ball
+class Box
 {
 public:
 	Particle particle;
 
-	Ball(Vector3 position)
+	real side;
+
+	Box(Vector3 position)
 	{
-		particle.setMass(1.0f);
+		particle.setMass(10.0f); // 30 kg
 		particle.setVelocity(Vector3());
 		particle.setAcceleration(Vector3());
-		particle.setDamping(0.5f);
+		particle.setDamping(0.9f);
+		side = 1.0f;
 
 		particle.setPosition(position);
 	
@@ -150,44 +93,46 @@ public:
 		glColor3f(0.75, 0.75, 0.75);
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
-		glutSolidSphere(10.0f, 20, 20);
+		glutSolidCube(side);
 		glPopMatrix();
+	}
 
-		glColor3f(0.5, 0.5, 0.5);
-		glPushMatrix();
-		glTranslatef(position.x, 2.0f, position.z);
-		glScalef(1.0f, 0.1f, 1.0f);
-		glutSolidSphere(10.0f, 20, 20);
-		glPopMatrix();
+	real volume()
+	{
+		return (side * side * side);
 	}
 };
 
 /**
  * The main demo class definition.
  */
-class UpliftDemo : public Application
+class BuoyancyDemo : public Application
 {
-	static const int PlaneWidth = 300;
+	static const int PlaneWidth = 10;
 
-	static const int PlaneHight = 300;
+	static const int PlaneHight = 10;
 
 	ParticleWorld world;
 
-	Ball ball;
+	Box ball;
 
 	Vector3 upliftPosition;
 
-	real radius;
+	real side;
 
 	PushForceGenerator pushForceGenerator;
+
+	ParticleBuoyancy buoyancyForceGenerator;
+
+	bool pause;
 
     /** Moves the particle. */
     void move(Direction dir);
 
 public:
     /** Creates a new demo object. */
-    UpliftDemo();
-    ~UpliftDemo();
+    BuoyancyDemo();
+    ~BuoyancyDemo();
 
     /** Sets up the graphic rendering. */
     virtual void initGraphics();
@@ -206,26 +151,26 @@ public:
 };
 
 // Method definitions
-UpliftDemo::UpliftDemo()
+BuoyancyDemo::BuoyancyDemo()
 	:
-	ball(Vector3(PlaneWidth / 2, 75, 50)),
+	ball(Vector3(PlaneWidth / 2, 5, PlaneHight / 2)),
 	world(1),
 	upliftPosition(PlaneWidth / 2, 0, PlaneHight / 2),
-	radius(40.0f),
-	pushForceGenerator(20, 0.5f)
+	pushForceGenerator(20, 0.5f),
+	buoyancyForceGenerator(ball.side, ball.volume(), 0),
+	pause(false)
 {
     world.getParticles().push_back(&ball.particle);
 	world.getForceRegistry().add(&ball.particle, new ParticleGravity(Vector3::GRAVITY));
-	world.getForceRegistry().add(&ball.particle, new UpliftForceGenerator(50.0f, upliftPosition, radius));
-	world.getForceRegistry().add(&ball.particle, new FloorAirForceGenerator(1000.0f, 0.0f));
 	world.getForceRegistry().add(&ball.particle, &pushForceGenerator);
+	world.getForceRegistry().add(&ball.particle, &buoyancyForceGenerator);
 }
 
-UpliftDemo::~UpliftDemo()
+BuoyancyDemo::~BuoyancyDemo()
 {
 }
 
-void UpliftDemo::initGraphics()
+void BuoyancyDemo::initGraphics()
 {
     // Call the superclass
     Application::initGraphics();
@@ -234,12 +179,12 @@ void UpliftDemo::initGraphics()
     glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
 }
 
-const char* UpliftDemo::getTitle()
+const char* BuoyancyDemo::getTitle()
 {
-    return "Cyclone > Uplift Demo";
+    return "Cyclone > Buoyancy Demo";
 }
 
-void UpliftDemo::move(Direction dir)
+void BuoyancyDemo::move(Direction dir)
 {
     switch (dir)
     {
@@ -259,8 +204,13 @@ void UpliftDemo::move(Direction dir)
     
 }
 
-void UpliftDemo::update()
+void BuoyancyDemo::update()
 {
+	if (pause)
+	{
+		return;
+	}
+
 	// Clear accumulators
 	world.startFrame();
 
@@ -274,14 +224,26 @@ void UpliftDemo::update()
     Application::update();
 }
 
-void UpliftDemo::display()
+std::string format(char* format, ...)
+{
+	char szBuffer1[1024] = { 0 };
+
+    va_list args;
+    va_start(args, format);
+    vsprintf_s(szBuffer1, format, args);
+    va_end(args);
+
+	return szBuffer1;
+}
+
+void BuoyancyDemo::display()
 {
     const static real size = 0.1f;
 
     // Clear the viewport and set the camera direction
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt(PlaneWidth, 150, PlaneHight / 2.0,  PlaneWidth / 2.0, 0.0, PlaneHight / 2.0,  0.0, 1.0, 0.0);
+    gluLookAt(PlaneWidth + 10, 2, PlaneHight / 2.0,  PlaneWidth / 2.0, 0.0, PlaneHight / 2.0,  0.0, 1.0, 0.0);
 
     glBegin(GL_QUADS);
 	glColor3f(0.0, 0.0, 1.0);
@@ -291,18 +253,15 @@ void UpliftDemo::display()
 	glVertex3d(0, 0, 0);
     glEnd();
 
-	// Draw the ball
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glPushMatrix();
-	glTranslatef(upliftPosition.x, upliftPosition.y, upliftPosition.z);
-	glScalef(1.0f, 0.1f, 1.0f);
-	glutSolidSphere(radius, 20, 20);
-	glPopMatrix();
-
 	ball.render();
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+	renderText(10.0f, 10.0f, format("acceleration: %s", ball.particle.getAcceleration().toString().c_str()).c_str());
+	renderText(10.0f, 20.0f, format("velocity: %s", ball.particle.getVelocity().toString().c_str()).c_str());
+	renderText(10.0f, 30.0f, format("position: %s", ball.particle.getPosition().toString().c_str()).c_str());
 }
 
-void UpliftDemo::key(unsigned char key)
+void BuoyancyDemo::key(unsigned char key)
 {
     switch (key)
     {
@@ -310,6 +269,7 @@ void UpliftDemo::key(unsigned char key)
     case 'd': move(Direction::Forward); break;
     case 'w': move(Direction::Left); break;
     case 's': move(Direction::Right); break;
+    case 'p': pause = !pause; break;
     }
 }
 
@@ -319,5 +279,5 @@ void UpliftDemo::key(unsigned char key)
  */
 Application* getApplication()
 {
-    return new UpliftDemo();
+    return new BuoyancyDemo();
 }

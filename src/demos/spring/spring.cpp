@@ -42,7 +42,7 @@ public:
 		totalDuration(totalDuration),
 		remaining(0.0f)
 	{
-		printf("force generated");
+		
 	}
 
 	void push(Vector3 direction)

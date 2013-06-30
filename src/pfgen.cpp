@@ -100,6 +100,34 @@ waterHeight(waterHeight), liquidDensity(liquidDensity)
 {
 }
 
+//void ParticleBuoyancy::updateForce(Particle* particle, real duration)
+//{
+//    // Calculate the submersion depth
+//    real depth = particle->getPosition().y;
+//
+//    // Check if we're out of the water
+//    if (depth >= waterHeight + maxDepth) return;
+//    Vector3 force(0,0,0);
+//
+//	printf("depth: %f\nvolume: %f\n", depth, volume);
+//
+//    // Check if we're at maximum depth
+//    if (depth <= waterHeight - maxDepth)
+//    {
+//        force.y = -1 * liquidDensity * volume * Vector3::GRAVITY.y;
+//        particle->addForce(force);
+//		printf("force fully submerged: %s\n", force.toString().c_str());
+//        return;
+//    }
+//
+//    // Otherwise we are partly submerged
+//	real d = (depth - waterHeight - maxDepth) / (2.0f * maxDepth);
+//    force.y = liquidDensity * volume * d * Vector3::GRAVITY.y;
+//	printf("force partially submerged: %s\n", force.toString().c_str());
+//	printf("d: %f\n", d);
+//    particle->addForce(force);
+//}
+
 void ParticleBuoyancy::updateForce(Particle* particle, real duration)
 {
     // Calculate the submersion depth

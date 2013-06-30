@@ -87,6 +87,7 @@
  */
 
 #include <math.h>
+#include <string>
 
 /**
  * @file
@@ -449,6 +450,13 @@ namespace cyclone {
             z = -z;
         }
 
+		std::string toString()
+		{
+			char buffer[64];
+			sprintf_s(buffer, "<%f, %f, %f>", x, y, z);
+
+			return std::string(buffer);
+		}
     };
 
     /**
