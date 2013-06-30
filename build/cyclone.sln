@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spring", "spring.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bridge", "bridge.vcxproj", "{1E5BB8E4-2147-4984-9D01-2BA4831211B6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform.vcxproj", "{37258455-55C4-4E4E-8473-6B53D4ADB50A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +72,10 @@ Global
 		{1E5BB8E4-2147-4984-9D01-2BA4831211B6}.Debug|Win32.Build.0 = Debug|Win32
 		{1E5BB8E4-2147-4984-9D01-2BA4831211B6}.Release|Win32.ActiveCfg = Release|Win32
 		{1E5BB8E4-2147-4984-9D01-2BA4831211B6}.Release|Win32.Build.0 = Release|Win32
+		{37258455-55C4-4E4E-8473-6B53D4ADB50A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{37258455-55C4-4E4E-8473-6B53D4ADB50A}.Debug|Win32.Build.0 = Debug|Win32
+		{37258455-55C4-4E4E-8473-6B53D4ADB50A}.Release|Win32.ActiveCfg = Release|Win32
+		{37258455-55C4-4E4E-8473-6B53D4ADB50A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
