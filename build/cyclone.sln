@@ -29,6 +29,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "buoyancy", "buoyancy.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lighterThanAir", "lighterThanAir.vcxproj", "{7A03F981-9DF4-482D-9CCE-7191A5221AFC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "overcrowding", "overcrowding.vcxproj", "{4C7A801D-BEB7-4957-AF71-B60C9639B22B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD} = {EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -93,6 +98,12 @@ Global
 		{7A03F981-9DF4-482D-9CCE-7191A5221AFC}.Release|Win32.ActiveCfg = Release|Win32
 		{7A03F981-9DF4-482D-9CCE-7191A5221AFC}.Release|Win32.Build.0 = Release|Win32
 		{7A03F981-9DF4-482D-9CCE-7191A5221AFC}.Release|Win32.Deploy.0 = Release|Win32
+		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Debug|Win32.Build.0 = Debug|Win32
+		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Debug|Win32.Deploy.0 = Debug|Win32
+		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Release|Win32.ActiveCfg = Release|Win32
+		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Release|Win32.Build.0 = Release|Win32
+		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

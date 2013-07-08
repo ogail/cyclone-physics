@@ -104,7 +104,7 @@ namespace cyclone {
 
         /** Retrieve the anchor point. */
         const Vector3* getAnchor() const { return anchor; }
-
+		void setAnchor(Vector3* anchor) { ParticleAnchoredSpring::anchor = anchor; }
         /** Set the spring's properties. */
         void init(Vector3 *anchor,
                   real springConstant,

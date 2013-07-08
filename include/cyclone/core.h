@@ -87,6 +87,8 @@
  */
 
 #include <math.h>
+#include <time.h>
+#include <stdlib.h>
 #include <string>
 
 /**
@@ -456,6 +458,44 @@ namespace cyclone {
 			sprintf_s(buffer, "<%f, %f, %f>", x, y, z);
 
 			return std::string(buffer);
+		}
+
+		static Vector3 randomWithMagnitudeRange(unsigned minMagnitude, unsigned maxMagnitude)
+		{
+			Vector3 randDir = randomDir();
+			unsigned range = maxMagnitude - minMagnitude + 1;
+			unsigned randMagnitude = rand() % range;
+			randMagnitude += minMagnitude;
+
+			return randDir * real(randMagnitude);
+		}
+
+		/*static Vector3 random(int minXYZ, int maxXYZ)
+		{
+		Vector3 randVec;
+		int range = maxXYZ - minXYZ + 1;
+
+		randVec.x = real(rand() % range);
+		randVec.z = real(rand() % range);
+		randVec.normalise();
+
+		randVec.x += minXYZ;
+		randVec.y += minXYZ;
+		randVec.z += minXYZ;
+
+		return randVec;
+		}*/
+
+		static Vector3 randomDir(unsigned randRangeMax = 100)
+		{
+			Vector3 randDir;
+			
+			randDir.x = real((1 - (rand() % 3)) * (rand() % (int)randRangeMax));
+			randDir.y = real((1 - (rand() % 3)) * (rand() % (int)randRangeMax));
+			randDir.z = real((1 - (rand() % 3)) * (rand() % (int)randRangeMax));
+			randDir.normalise();
+
+			return randDir;
 		}
     };
 
