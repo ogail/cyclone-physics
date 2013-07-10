@@ -34,6 +34,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "overcrowding", "overcrowdin
 		{EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD} = {EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flightsim", "flightsim.vcxproj", "{7A928A87-985D-4C9E-9211-7B86FB607BB5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD} = {EA8BC643-A2FC-43B7-BAF3-6FD8A806FDBD}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -104,6 +109,10 @@ Global
 		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Release|Win32.ActiveCfg = Release|Win32
 		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Release|Win32.Build.0 = Release|Win32
 		{4C7A801D-BEB7-4957-AF71-B60C9639B22B}.Release|Win32.Deploy.0 = Release|Win32
+		{7A928A87-985D-4C9E-9211-7B86FB607BB5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7A928A87-985D-4C9E-9211-7B86FB607BB5}.Debug|Win32.Build.0 = Debug|Win32
+		{7A928A87-985D-4C9E-9211-7B86FB607BB5}.Release|Win32.ActiveCfg = Release|Win32
+		{7A928A87-985D-4C9E-9211-7B86FB607BB5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
