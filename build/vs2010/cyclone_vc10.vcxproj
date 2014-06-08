@@ -39,9 +39,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\lib\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\tmp\Debug\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\lib\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\tmp\Release\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -75,14 +75,14 @@
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\lib\$(TargetFileName)</OutputFile>
+      <OutputFile>..\..\lib\$(TargetFileName)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -102,43 +102,43 @@
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\..\lib\cyclone.lib</OutputFile>
+      <OutputFile>.\..\..\lib\cyclone.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\body.cpp" />
-    <ClCompile Include="..\src\collide_coarse.cpp" />
-    <ClCompile Include="..\src\collide_fine.cpp" />
-    <ClCompile Include="..\src\contacts.cpp" />
-    <ClCompile Include="..\src\core.cpp" />
-    <ClCompile Include="..\src\fgen.cpp" />
-    <ClCompile Include="..\src\joints.cpp" />
-    <ClCompile Include="..\src\particle.cpp" />
-    <ClCompile Include="..\src\pcontacts.cpp" />
-    <ClCompile Include="..\src\pfgen.cpp" />
-    <ClCompile Include="..\src\plinks.cpp" />
-    <ClCompile Include="..\src\pworld.cpp" />
-    <ClCompile Include="..\src\random.cpp" />
-    <ClCompile Include="..\src\world.cpp" />
+    <ClCompile Include="..\..\src\body.cpp" />
+    <ClCompile Include="..\..\src\collide_coarse.cpp" />
+    <ClCompile Include="..\..\src\collide_fine.cpp" />
+    <ClCompile Include="..\..\src\contacts.cpp" />
+    <ClCompile Include="..\..\src\core.cpp" />
+    <ClCompile Include="..\..\src\fgen.cpp" />
+    <ClCompile Include="..\..\src\joints.cpp" />
+    <ClCompile Include="..\..\src\particle.cpp" />
+    <ClCompile Include="..\..\src\pcontacts.cpp" />
+    <ClCompile Include="..\..\src\pfgen.cpp" />
+    <ClCompile Include="..\..\src\plinks.cpp" />
+    <ClCompile Include="..\..\src\pworld.cpp" />
+    <ClCompile Include="..\..\src\random.cpp" />
+    <ClCompile Include="..\..\src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\cyclone\body.h" />
-    <ClInclude Include="..\include\cyclone\collide_coarse.h" />
-    <ClInclude Include="..\include\cyclone\collide_fine.h" />
-    <ClInclude Include="..\include\cyclone\contacts.h" />
-    <ClInclude Include="..\include\cyclone\core.h" />
-    <ClInclude Include="..\include\cyclone\cyclone.h" />
-    <ClInclude Include="..\include\cyclone\fgen.h" />
-    <ClInclude Include="..\include\cyclone\joints.h" />
-    <ClInclude Include="..\include\cyclone\particle.h" />
-    <ClInclude Include="..\include\cyclone\pcontacts.h" />
-    <ClInclude Include="..\include\cyclone\pfgen.h" />
-    <ClInclude Include="..\include\cyclone\plinks.h" />
-    <ClInclude Include="..\include\cyclone\precision.h" />
-    <ClInclude Include="..\include\cyclone\pworld.h" />
-    <ClInclude Include="..\include\cyclone\random.h" />
-    <ClInclude Include="..\include\cyclone\world.h" />
+    <ClInclude Include="..\..\include\cyclone\body.h" />
+    <ClInclude Include="..\..\include\cyclone\collide_coarse.h" />
+    <ClInclude Include="..\..\include\cyclone\collide_fine.h" />
+    <ClInclude Include="..\..\include\cyclone\contacts.h" />
+    <ClInclude Include="..\..\include\cyclone\core.h" />
+    <ClInclude Include="..\..\include\cyclone\cyclone.h" />
+    <ClInclude Include="..\..\include\cyclone\fgen.h" />
+    <ClInclude Include="..\..\include\cyclone\joints.h" />
+    <ClInclude Include="..\..\include\cyclone\particle.h" />
+    <ClInclude Include="..\..\include\cyclone\pcontacts.h" />
+    <ClInclude Include="..\..\include\cyclone\pfgen.h" />
+    <ClInclude Include="..\..\include\cyclone\plinks.h" />
+    <ClInclude Include="..\..\include\cyclone\precision.h" />
+    <ClInclude Include="..\..\include\cyclone\pworld.h" />
+    <ClInclude Include="..\..\include\cyclone\random.h" />
+    <ClInclude Include="..\..\include\cyclone\world.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
